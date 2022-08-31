@@ -123,12 +123,12 @@ proxy-groups:
 
 # 规则地址
 rule-providers:
-#  AAA-zhilian: # 自定义白名单强制直连
-#    type: http
-#    behavior: classical  # domain, ipcidr or classical (premium core only)
-#    path: ./rule_provider/zhilian
-#    url: https://cdn.jsdelivr.net/gh/Faithlv-1/MyClash@main/myclash.list
-#    interval: 86400
+  AAA-zhilian: # 自定义白名单强制直连
+    type: http
+    behavior: classical  # domain, ipcidr or classical (premium core only)
+    path: ./rule_provider/zhilian
+    url: https://cdn.jsdelivr.net/gh/Faithlv-1/MyClash@main/myclash.list
+    interval: 86400
 
 #  AAA-daili: # 自定义黑名单强制代理
 #    type: http
@@ -262,7 +262,7 @@ rules:
 #  - DOMAIN,yacd.haishan.me,DIRECT
 #  - DOMAIN-SUFFIX,freenom.com,🚀 节点选择
   # 下面的规则是通过上面的rule-provider来确定的
-#  - RULE-SET,AAA-zhilian,🎯 全球直连
+  - RULE-SET,AAA-zhilian,🎯 全球直连
 #  - RULE-SET,AAA-daili,🚀 节点选择
   - RULE-SET,LocalAreaNetwork,🎯 全球直连
 #  - RULE-SET,Nintendo,🎮 Nintendo
