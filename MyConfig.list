@@ -1,278 +1,285 @@
-[common]
-;API mode, set to true to prevent loading local subscriptions or serving local files directly
-api_mode=a20010904
-
-;Access token used for performing critical action through Web interface
-api_access_token=password
-
-;Default URLs, used when no URL is provided in request, use "|" to separate multiple subscription links, supports local files/URL
-default_url=
-
-;Insert subscription links to requests. Can be used to add node(s) to all exported subscriptions.
-enable_insert=true
-;URLs to insert to subscription links, use "|" to separate multiple subscription links, supports local files/URL
-insert_url=
-;Prepend inserted URLs to subscription links. Nodes in insert_url will be added to groups first with non-group-specific match pattern.
-prepend_insert_url=true
-
-;Exclude nodes which remarks match the following patterns. Supports regular expression.
-exclude_remarks=(鍒版湡|鍓╀綑娴侀噺|鏃堕棿|瀹樼綉|浜у搧|骞冲彴)
-;exclude_remarks=(other rule)
-
-;Only include nodes which remarks match the following patterns. Supports regular expression.
-;include_remarks=V3.*娓?
-;Enable script support for filtering nodes
-enable_filter=false
-;Script used for filtering nodes. Supports inline script and script path. A "filter" function with 1 argument which is a node should be defined in the script.
-;Example: Inline script: Set value to content of script. Replace all line break with "\n".
-;         Script path: Set value to "path:/path/to/script.js".
-;filter_script=function filter(node) {\n    const info = JSON.parse(node.ProxyInfo);\n    if(info.EncryptMethod.includes('chacha20'))\n        return true;\n    return false;\n}
-
-;Setting an external config file as default when none is specified, supports local files/URL
-;default_external_config=config/example_external_config.ini
-
-;The file scope limit of the 'rule_base' options in external configs.
-base_path=base
-
-;Clash config base used by the generator, supports local files/URL
-clash_rule_base=base/all_base.tpl
-
-;Surge config base used by the generator, supports local files/URL
-surge_rule_base=base/all_base.tpl
-
-;Surfboard config base used by the generator, supports local files/URL
-surfboard_rule_base=base/all_base.tpl
-
-;Mellow config base used by the generator, supports local files/URL
-mellow_rule_base=base/all_base.tpl
-
-;Quantumult config base used by the generator, supports local files/URL
-quan_rule_base=base/all_base.tpl
-
-;Quantumult X config base used by the generator, supports local files/URL
-quanx_rule_base=base/all_base.tpl
-
-;Loon config base used by the generator, supports local files/URL
-loon_rule_base=base/all_base.tpl
-
-;Shadowsocks Android config base used by the generator, supports local files/URL
-sssub_rule_base=base/all_base.tpl
-
-;Proxy used to download configs, rulesets or subscriptions, set to NONE or empty to disable it, set to SYSTEM to use system proxy.
-;Accept cURL-supported proxies (http:// https:// socks4a:// socks5://)
-;Additional support for CORS proxy ( https://github.com/Rob--W/cors-anywhere https://github.com/Zibri/cloudflare-cors-anywhere etc.), prefix the address with "cors:" to recognize the address as CORS proxy.
-;Example:  http://127.0.0.1:80  socks5://example.com:1080  cors:https://cors-anywhere.herokuapp.com/
-proxy_config=SYSTEM
-proxy_ruleset=SYSTEM
-proxy_subscription=NONE
-
-;Append a proxy type string ([SS] [SSR] [VMess]) to node remark.
-append_proxy_type=false
-
-[userinfo]
-;Rules to extract stream data from node
-;Format: full_match_regex|new_format_regex
-;where new_format_regex should be like "total=$1&left=$2&used=$3"
-stream_rule=^鍓╀綑娴侀噺锛?.*?)\|鎬绘祦閲忥細(.*)$|total=$2&left=$1
-stream_rule=^鍓╀綑娴侀噺锛?.*?) (.*)$|total=$1&left=$2
-stream_rule=^Bandwidth: (.*?)/(.*)$|used=$1&total=$2
-stream_rule=^\[.*?\]鍓╀綑(.*?)@(?:.*)$|total=$1
-stream_rule=^.*?娴侀噺:(.*?) 鍓?(?:.*)$|total=$1
-
-;Rules to extract expire time data from node
-;Format: full_match_regex|new_format_regex
-;where new_format_regex should follow this example: yyyy:mm:dd:hh:mm:ss
-time_rule=^杩囨湡鏃堕棿锛?\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)$|$1:$2:$3:$4:$5:$6
-time_rule=^鍒版湡鏃堕棿(:|锛?(\d+)-(\d+)-(\d+)$|$1:$2:$3:0:0:0
-time_rule=^Smart Access expire: (\d+)/(\d+)/(\d+)$|$1:$2:$3:0:0:0
-time_rule=^.*?娴侀噺:(?:.*?) 鍓?(.*)$|left=$1d
-
-[node_pref]
-;udp_flag=false
-;tcp_fast_open_flag=false
-;skip_cert_verify_flag=false
-;tls13_flag=false
-
-sort_flag=false
-;Script used for sorting nodes. A "compare" function with 2 arguments which are the 2 nodes to be compared should be defined in the script. Supports inline script and script path.
-;Examples can be seen at the filter_script option in [common] section.
-;sort_script=function compare(node_a, node_b) {\n    const info_a = JSON.parse(node_a.ProxyInfo);\n    const info_b = JSON.parse(node_b.ProxyInfo);\n    return info_a.Remark > info_b.Remark;\n}
-
-filter_deprecated_nodes=false
-append_sub_userinfo=true
-clash_use_new_field_name=true
-
-;Generate style of the proxies section of Clash subscriptions.
-;Supported styles: block, flow, compact
-;Block: - name: name1    Flow: - {name: name1, key: value}    Compact: [{name: name1, key: value},{name: name2, key: value}]
-;         key: value           - {name: name2, key: value}
-;       - name: name2
-;         key: value
-clash_proxies_style=flow
-
-;Rename remarks with the following patterns. Supports regular expression.
-;Format: Search_Pattern@Replace_Pattern
-;rename_node=IPLC@涓撶嚎
-;rename_node=RELAY@涓浆
-;rename_node=BGP-@
-;rename_node=!!script:function rename(node) {\n  const info = JSON.parse(node.ProxyInfo);\n  const geoinfo = JSON.parse(geoip(info.Hostname));\n  if(geoinfo.country_code == "CN")\n    return "CN " + node.Remark;\n}
-;rename_node=!!script:path:/path/to/script.js
-
-rename_node=!!import:snippets/rename_node.txt
-
-[managed_config]
-;Append a '#!MANAGED-CONFIG' info to Surge configurations
-write_managed_config=true
-
-;Address prefix for MANAGED-CONFIG info, without the trailing "/".
-;This address will also be used for generating /getruleset, /qx-rewrite, /qx-script addresses.
-managed_config_prefix=http://127.0.0.1:25500
-
-;Managed config update interval in seconds, determine how long the config will be updated.
-config_update_interval=86400
-
-;If config_update_strict is set to true, Surge will require a force update after the interval.
-config_update_strict=false
-
-;Device ID to be written to rewrite scripts for some version of Quantumult X 
-quanx_device_id=
-
-[surge_external_proxy]
-;surge_ssr_path=/usr/bin/ssr-local
-resolve_hostname=true
-
-[emojis]
-add_emoji=true
-remove_old_emoji=true
-
-;Rule to add emojis. Supports regular expression.
-;Format: Remark_Search_Pattern,emoji
-
-;rule=(娴侀噺|鏃堕棿|搴旀€杩囨湡|Bandwidth|expire),馃彸锔忊€嶐煂?;rule=AC,馃嚘馃嚚
-;rule=!!script:function getEmoji(node) {\n  const info = JSON.parse(node.ProxyInfo);\n  const geoinfo = JSON.parse(geoip(info.Hostname));\n  if(geoinfo.country_code == "CN")\n    return "馃彸锔忊€嶐煂?;\n}
-;rule=!!script:path:/path/to/script/.js
-
-rule=!!import:snippets/emoji.txt
-
-[rulesets]
-;Enable generating rules with rulesets
-enabled=true
-
-;Overwrite the existing rules in rule_base
-overwrite_original_rules=
-
-;Perform a ruleset update on request
-update_ruleset_on_request=true
-
-ruleset=?? 节点选择,https://cdn.jsdelivr.net/gh/Faithlv-1/MyClash/myclash.list
+# 服务器节点订阅
+proxy-providers:
+  ss: # Provider 名称
+    type: http # http在线获取  file加载本地文件
+    url:  xxxxxxxxxxxxx # 机场给你的clash订阅链接
+    interval: 86400
+    path: ./proxy_provider/ss.yaml # 保存在本地文件的名字，可以随便取
+#    filter: '(港|HK|Hong Kong)' # shellclash要使用filter请切换meta内核 正则过滤后本组仅含HK节点
+    health-check:  # 健康检查选项从此处开始
+      enable: true # 是否自动进行latency-test
+      interval: 3600  # ping节点时间间隔 
+      url: http://clients3.google.com/generate_204
+      #url: http://www.gstatic.com/generate_204
+      
+# 地区筛选订阅重复造轮子     
+#  hk: # 地区筛选名称
+#    type: file # http在线获取, file加载本地文件
+#    path: ./proxy_provider/ss.yaml # 上方订阅本地文件地址
+#    filter: '(港|HK|Hong Kong)' # 过滤后本组仅含HK节点
+#    health-check:  # 健康检查选项从此处开始
+#      enable: true # 是否自动进行latency-test
+#      interval: 3600  # ping节点时间间隔 
+#      url: http://clients3.google.com/generate_204
 
 
-ruleset=?? 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Lan/Lan.list
-;ruleset=?? Nintendo,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Nintendo/Nintendo.list
-ruleset=?? 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Direct/Direct.list
-ruleset=?? 全球直连,https://raw.githubusercontent.com/s1oz/unraid/master/customize.list
-ruleset=?? 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/NTPService/NTPService.list
-ruleset=?? 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Download/Download.list
-ruleset=?? 谷歌FCM,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/GoogleFCM/GoogleFCM.list
-;ruleset=?? 全球直连,https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/GoogleCN.list
-ruleset=?? PayPal,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/PayPal/PayPal.list
-ruleset=?? SpeedTest,https://cdn.jsdelivr.net/gh/LM-Firefly/Rules@master/SpeedTest.list
-ruleset=?? YouTubePremium,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/YouTube/YouTube.list
-ruleset=?? YouTubePremium,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/YouTubeMusic/YouTubeMusic.list
-ruleset=?? AdBlock,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/ZhihuAds/ZhihuAds.list
-ruleset=?? AdBlock,https://limbopro.com/Adblock4limbo.list
-ruleset=?? AdBlock,https://cdn.jsdelivr.net/gh/privacy-protection-tools/anti-AD@master/anti-ad-surge.txt
-ruleset=?? OneDrive,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/OneDrive/OneDrive.list
-ruleset=?? 微软服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Microsoft/Microsoft.list
-ruleset=?? 苹果服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Apple/Apple.list
-ruleset=?? 电报信息,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Telegram/Telegram.list
-ruleset=?? 国外媒体,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/GlobalMedia/GlobalMedia.list
-ruleset=?? 游戏服务,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Game/Game.list
-ruleset=?? 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/PrivateTracker/PrivateTracker.list
-ruleset=?? 节点选择,https://cdn.jsdelivr.net/gh/LM-Firefly/Rules@master/PROXY.list
-ruleset=?? 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/ChinaMax/ChinaMax.list
-ruleset=?? 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/Cloud/CloudCN/CloudCN.list
-ruleset=?? 全球直连,https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Surge/ChinaIPs/ChinaIPs.list
-ruleset=?? 全球直连,[]GEOIP,CN
-ruleset=?? 漏网之鱼,[]FINAL
+# 规则分组
+proxy-groups:
+# type:
+# select 手动选择，该组在节点列表上，手动选择列表或者 proxy-group 
+# url-test 延迟最低节点，测试该组所有节点的延迟
+# fallback 定期测试列表中服务器的可用性，如url-test. 将使用第一个可用的服务器
+# load-balance 负载均衡，由该组2个以上的节点提供链接 
+# 
 
-[proxy_groups]
-custom_proxy_group=?? 节点选择`select`.*`[]DIRECT`[]?? 自动选择
-custom_proxy_group=?? SpeedTest`select`[]DIRECT`.*
-custom_proxy_group=?? YouTubePremium`select`[]?? 节点选择`.*
-custom_proxy_group=?? 国外媒体`select`[]?? 节点选择``.*
-custom_proxy_group=?? PayPal`select`[]?? 全球直连`[]?? 节点选择`.*
-custom_proxy_group=?? 谷歌FCM`select`[]?? 节点选择`[]?? 全球直连`
-custom_proxy_group=?? 电报信息`select`[]?? 节点选择`.*
-custom_proxy_group=?? OneDrive`select`[]?? 全球直连`[]?? 节点选择`.*
-custom_proxy_group=?? 微软服务`select`[]?? 全球直连`[]?? 节点选择`.*
-custom_proxy_group=?? 苹果服务`select`[]?? 全球直连`[]?? 节点选择`.*
-;custom_proxy_group=?? Nintendo`select`[]REJECT`[]DIRECT`.*
-custom_proxy_group=?? 游戏服务`select`[]?? 全球直连`[]?? 节点选择`.*
-custom_proxy_group=?? AdBlock`select`[]REJECT`[]DIRECT
-custom_proxy_group=?? 全球直连`select`[]DIRECT
-custom_proxy_group=?? 漏网之鱼`select`[]?? 节点选择`[]DIRECT`.*
-custom_proxy_group=?? 自动选择`url-test`.*`http://www.gstatic.com/generate_204`300,,150
-custom_proxy_group=!!import:snippets/groups.txt
+     
+  - name: "🚀 节点选择"
+    type: select
+    use:
+      - ss # 这里就是上面proxy-providers中定义的名称
+    url: http://clients3.google.com/generate_204
+    interval: 150
+    tolerance: 100
+    proxies:
+      - 🎯 全球直连
+#      - HK节点
+ 
+ # - name: "HK节点"
+ #   type: url-test
+ #   use:
+ #     - hk #上面重复造的轮子
 
-[template]
-;The file scope limit of 'include' statement inside the templates.
-template_path=
+  - name: "🌍 国外媒体"
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+    use:
+      - ss
+    
+  - name: "💰 PayPal"
+    type: select
+    proxies:
+      - 🎯 全球直连
+    use:
+      - ss
 
-;The following settings will be added to the "global" scope of the template variables
-;Value of 'clash.http_port' can be accessed with 'global.clash.http_port' in the template.
-clash.http_port=7890
-clash.socks_port=7891
-clash.allow_lan=true
-clash.log_level=info
+  - name: "📲 电报信息"
+    type: select
+    proxies:
+      - 🚀 节点选择
+    use:
+      - ss
 
-[aliases]
-;Aliases for accessing interfaces. Can be used to shorten the URI.
-;All arguments passed when accessing the alias name will be appended to the arguments of the alias target.
-;Format: uri=target
-/v=/version
-/clash=/sub?target=clash
-/clashr=/sub?target=clashr
-/surge=/sub?target=surge
-/quan=/sub?target=quan
-/quanx=/sub?target=quanx
-/mellow=/sub?target=mellow
-/surfboard=/sub?target=surfboard
-/loon=/sub?target=loon
-/ss=/sub?target=ss
-/ssd=/sub?target=ssd
-/sssub=/sub?target=sssub
-/ssr=/sub?target=ssr
-/v2ray=/sub?target=v2ray
-/trojan=/sub?target=trojan
+  - name: "🍎 苹果服务"
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🚀 节点选择
 
-[tasks]
-;Tasks to be run regularly during server execution.
-;Format: Name`Cron_Expression`JS_Path`Timeout_in_seconds
-;task=tick`0/10 * * * * ?`tick.js`3
+  - name: "Ⓜ️ OneDrive"
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🚀 节点选择
+    
+  - name: "Ⓜ️ 微软服务"
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🚀 节点选择
+    
+#  - name: "🎮 Nintendo"
+#    type: select
+#    proxies:
+#      - REJECT
+#      - 🎯 全球直连
+#      - 🚀 节点选择
+    
+  - name: "🎮 游戏服务"
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🚀 节点选择
+    use:
+      - ss
+       
+  - name: "🆎 AdBlock"
+    type: select
+    proxies:
+      - REJECT
+      - 🎯 全球直连
+    
+  - name: "🎯 全球直连"
+    type: select
+    proxies:
+      - DIRECT
+    
+  - name: "🐟 漏网之鱼"
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
 
-[server]
-;Address to bind on for Web Server
-listen=127.0.0.1
+# 规则地址
+rule-providers:
+#  AAA-zhilian: # 自定义白名单强制直连
+#    type: http
+#    behavior: classical  # domain, ipcidr or classical (premium core only)
+#    path: ./rule_provider/zhilian
+#    url: https://cdn.jsdelivr.net/gh/Faithlv-1/MyClash@main/myclash.list
+#    interval: 86400
 
-;Port to bind on for Web Server
-port=25500
+#  AAA-daili: # 自定义黑名单强制代理
+#    type: http
+#    behavior: classical
+#    path: ./rule_provider/daili
+#    url: http://192.168.1.x/daili.txt # 本地路径可访问路径 更新方便
+#    interval: 86400
 
-;Root folder for web server, keep empty to disable
-serve_file_root=
+  LocalAreaNetwork: # Provider 名称
+    type: http
+    behavior: classical # domain, ipcidr or classical (premium core only)
+    path: ./rule_provider/LocalAreaNetwork
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Lan/Lan.yaml
+    interval: 86400
 
-[advanced]
-log_level=info
-print_debug_info=false
-max_pending_connections=10240
-max_concurrent_threads=2
-max_allowed_rulesets=0
-max_allowed_rules=0
-max_allowed_download_size=0
-enable_cache=false
-cache_subscription=60
-cache_config=300
-cache_ruleset=21600
-script_clean_context=true
-async_fetch_ruleset=false
-skip_failed_links=false
+#  Nintendo:
+#    type: http
+#    behavior: classical
+#    path: ./rule_provider/Nintendo
+#    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Nintendo/Nintendo.yaml
+#    interval: 86400
+
+  UnBan:
+    type: http
+    behavior: classical
+    path: ./rule_provider/UnBan
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Direct/Direct.yaml
+    interval: 86400
+
+  NTP-Service:
+    type: http
+    behavior: classical
+    path: ./rule_provider/NTP-Service
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/NTPService/NTPService.yaml
+    interval: 86400
+
+  PayPal:
+    type: http
+    behavior: classical
+    path: ./rule_provider/PayPal
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/PayPal/PayPal.yaml
+    interval: 86400 
+
+  zhihu:
+    type: http
+    behavior: classical
+    path: ./rule_provider/zhihu
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/ZhihuAds/ZhihuAds.yaml
+    interval: 86400
+
+  Advertising:
+    type: http
+    behavior: classical
+    path: ./rule_provider/Advertising
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Advertising/Advertising_Classical.yaml
+    interval: 86400
+    
+  OneDrive:
+    type: http
+    behavior: classical
+    path: ./rule_provider/OneDrive
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OneDrive/OneDrive.yaml
+    interval: 86400
+
+  Microsoft:
+    type: http
+    behavior: classical
+    path: ./rule_provider/Microsoft
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Microsoft/Microsoft.yaml
+    interval: 86400
+    
+  Apple:
+    type: http
+    behavior: classical
+    path: ./rule_provider/Apple
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Apple/Apple.yaml
+    interval: 86400
+
+  Telegram:
+    type: http
+    behavior: classical
+    path: ./rule_provider/Telegram
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Telegram/Telegram.yaml
+    interval: 86400
+    
+  GlobalMedia:
+    type: http
+    behavior: classical
+    path: ./rule_provider/GlobalMedia
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/GlobalMedia/GlobalMedia_Classical.yaml
+    interval: 86400
+    
+  PrivateTracker:
+    type: http
+    behavior: classical
+    path: ./rule_provider/PrivateTracker
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/PrivateTracker/PrivateTracker.yaml
+    interval: 86400
+    
+  Game:
+    type: http
+    behavior: classical
+    path: ./rule_provider/Game
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Game/Game.yaml
+    interval: 86400
+    
+  PROXY:
+    type: http
+    behavior: classical
+    path: ./rule_provider/PROXY
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Proxy/Proxy_Classical.yaml
+    interval: 86400
+    
+  CloudCN:
+    type: http
+    behavior: classical
+    path: ./rule_provider/CloudCN
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Cloud/CloudCN/CloudCN.yaml
+    interval: 86400
+    
+  ChinaMax:
+    type: http
+    behavior: classical
+    path: ./rule_provider/ChinaMax
+    url: https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/ChinaMax/ChinaMax_Classical.yaml
+    interval: 86400
+
+# 规则
+rules:
+  # 这些是自定义规则，想要的可以继续加
+#  - DOMAIN,yacd.haishan.me,DIRECT
+#  - DOMAIN-SUFFIX,freenom.com,🚀 节点选择
+  # 下面的规则是通过上面的rule-provider来确定的
+#  - RULE-SET,AAA-zhilian,🎯 全球直连
+#  - RULE-SET,AAA-daili,🚀 节点选择
+  - RULE-SET,LocalAreaNetwork,🎯 全球直连
+#  - RULE-SET,Nintendo,🎮 Nintendo
+  - RULE-SET,UnBan,🎯 全球直连
+  - RULE-SET,NTP-Service,🎯 全球直连
+  - RULE-SET,PayPal,💰 PayPal
+  - RULE-SET,zhihu,🆎 AdBlock
+  - RULE-SET,Advertising,🆎 AdBlock
+  - RULE-SET,OneDrive,Ⓜ️ OneDrive
+  - RULE-SET,Microsoft,Ⓜ️ 微软服务
+  - RULE-SET,Apple,🍎 苹果服务
+  - RULE-SET,Telegram,📲 电报信息
+  - RULE-SET,GlobalMedia,🌍 国外媒体
+  - RULE-SET,PrivateTracker,🎯 全球直连
+  - RULE-SET,Game,🎮 游戏服务
+  - RULE-SET,PROXY,🚀 节点选择
+  - RULE-SET,CloudCN,🎯 全球直连
+  - RULE-SET,ChinaMax,🎯 全球直连
+  - GEOIP,CN,🎯 全球直连
+  - MATCH,🐟 漏网之鱼
